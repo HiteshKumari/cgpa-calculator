@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CGPA Calculator</title>
+
+<style>
+body{
+    font-family: Arial, sans-serif;
+    background: #f4f6f9;
+    margin:0;
+    padding:20px;
+}
+
+.container{
+    max-width:900px;
+    margin:auto;
+    background:white;
+    padding:25px;
+    border-radius:15px;
+    box-shadow:0 0 15px rgba(0,0,0,0.1);
+}
+
+h1{
+    text-align:center;
+    color:#2563eb;
+}
+
+input,select{
+    width:100%;
+    padding:10px;
+    margin-top:8px;
+    margin-bottom:10px;
+    border:1px solid #ccc;
+    border-radius:6px;
+}
+
+button{
+    padding:12px 18px;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+    margin:5px;
+    font-size:15px;
+}
+
+.add-btn{
+    background:#10b981;
+    color:white;
+}
+
+.calc-btn{
+    background:#2563eb;
+    color:white;
+}
+
+.subject{
+    border:1px solid #ddd;
+    padding:15px;
+    border-radius:10px;
+    margin-top:15px;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:20px;
+}
+
+table,th,td{
+    border:1px solid #ccc;
+}
+
+th,td{
+    padding:10px;
+    text-align:center;
+}
+
+th{
+    background:#2563eb;
+    color:white;
+}
+
+#result{
+    margin-top:20px;
+    padding:20px;
+    border-radius:10px;
+    background:#eef9f1;
+    text-align:center;
+    font-size:22px;
+    font-weight:bold;
+}
+
+.footer{
+    margin-top:30px;
+    text-align:center;
+}
+
+.footer a{
+    text-decoration:none;
+    background:black;
+    color:white;
+    padding:10px 15px;
+    border-radius:6px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>🎓 CGPA Calculator</h1>
+
+<label><b>Student Name</b></label>
+<input type="text" id="studentName" placeholder="Enter your name">
+
+<div id="subjects"></div>
+
+<button class="add-btn" onclick="addSubject()">➕ Add Subject</button>
+<button class="calc-btn" onclick="calculateCGPA()">📊 Calculate CGPA</button>
+
+<div id="tableContainer"></div>
+
+<div id="result"></div>
+
+<div class="footer">
+<h3>Hitesh Kumari</h3>
+<p>Email: your-email@example.com</p>
+
+<a href="https://digitalheroesco.com" target="_blank">
+Built for Digital Heroes
+</a>
+</div>
+
+</div>
+
+<script>
+
+const gradePoints = {
+"A+":10,
+"A":9,
+"B+":8,
+"B":7,
+"C+":6,
+"C":5,
+"D+":5,
+"D":4,
+"F":0,
+"I":0
+};
+
+function addSubject(){
+
+let div=document.createElement("div");
+
+div.className="subject";
+
+div.innerHTML=`
+<label><b>Subject Name</b></label>
+<input type="text" class="subjectName" placeholder="Enter Subject Name">
+
+<label><b>Credits</b></label>
+<input type="number" class="credit" placeholder="Enter Credits">
+
+<label><b>Grade</b></label>
+<select class="grade">
+<option>A+</option>
+<option>A</option>
+<option>B+</option>
+<option>B</option>
+<option>C+</option>
+<option>C</option>
+<option>D+</option>
+<option>D</option>
+<option>F</option>
+<option>I</option>
+</select>
+`;
+
+document.getElementById("subjects").appendChild(div);
+}
+
+function calculateCGPA(){
+
+let name=document.getElementById("studentName").value;
+
+let subjects=document.querySelectorAll(".subjectName");
+let credits=document.querySelectorAll(".credit");
+let grades=document.querySelectorAll(".grade");
+
+let totalCredits=0;
+let totalPoints=0;
+
+let tableHTML=`
+<table>
+<tr>
+<th>Subject</th>
+<th>Credits</th>
+<th>Grade</th>
+</tr>
+`;
+
+for(let i=0;i<subjects.length;i++){
+
+let sub=subjects[i].value;
+let credit=parseFloat(credits[i].value)||0;
+let grade=grades[i].value;
+
+totalCredits+=credit;
+totalPoints+=credit*gradePoints[grade];
+
+tableHTML+=`
+<tr>
+<td>${sub}</td>
+<td>${credit}</td>
+<td>${grade}</td>
+</tr>
+`;
+}
+
+tableHTML+=`</table>`;
+
+document.getElementById("tableContainer").innerHTML=tableHTML;
+
+if(totalCredits===0){
+document.getElementById("result").innerHTML="Please enter valid data.";
+return;
+}
+
+let cgpa=(totalPoints/totalCredits).toFixed(2);
+
+let emoji="😔";
+let message="Needs Improvement";
+
+if(cgpa>=9){
+emoji="🏆🔥";
+message="Outstanding";
+}
+else if(cgpa>=8){
+emoji="🎉😁";
+message="Excellent";
+}
+else if(cgpa>=7){
+emoji="😊";
+message="Good Job";
+}
+else if(cgpa>=6){
+emoji="🙂";
+message="Keep Improving";
+}
+
+document.getElementById("result").innerHTML=
+`
+<h2>${name}</h2>
+<p>CGPA: ${cgpa}</p>
+<p>${emoji} ${message}</p>
+`;
+}
+
+addSubject();
+
+</script>
+
+</body>
+</html>
